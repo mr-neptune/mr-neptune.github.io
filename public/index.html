@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wayne Wen</title>
+<meta name="description" content="Wayne Wen: backend and AI engineer, Computer Science at the University of Waterloo.">
+<meta property="og:title" content="Wayne Wen">
+<meta property="og:description" content="Backend and AI engineer, Computer Science at the University of Waterloo.">
+<meta name="theme-color" content="#0b1026">
+<link rel="canonical" href="https://wayne-wen.dev/">
+<meta property="og:url" content="https://wayne-wen.dev/">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1026'/%3E%3Cpath d='M21 6a10 10 0 1 0 5 15 8 8 0 1 1-5-15z' fill='%23f6e7c8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1026;
+  --ink:#eef1fb;
+  --soft:#b6bfdc;
+  --mute:#8790b3;
+  --pink:#f4a6bd;
+  --cyan:#8fd3ff;
+  --amber:#ffcf8a;
+  --glass:rgba(12,17,40,.68);
+  --line:rgba(190,205,255,.14);
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --display:'Sora','Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{background:var(--bg);color:var(--ink);font:16px/1.65 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+#scene{position:fixed;inset:0;width:100%;height:100%;z-index:-2;display:block}
+.frame{position:fixed;inset:0;z-index:-1;pointer-events:none}
+.frame::before,.frame::after{content:"";position:absolute;top:0;bottom:0;width:14px;background:linear-gradient(90deg,#05081a,#111733 60%,#070b1f);opacity:.9;box-shadow:0 0 30px rgba(0,0,0,.6)}
+.frame::before{left:7vw}.frame::after{right:7vw}
+.frame i{position:absolute;left:0;right:0;top:10vh;height:12px;background:linear-gradient(#111733,#05081a);opacity:.85}
+.frame b{position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,6,18,.82),transparent 7vw,transparent calc(100% - 7vw),rgba(4,6,18,.82)),linear-gradient(transparent 70%,rgba(5,8,22,.55))}
+@media (max-width:760px){.frame::before,.frame::after,.frame i{display:none}.frame b{background:linear-gradient(transparent 60%,rgba(5,8,22,.6))}}
+
+nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:2px;padding:6px;border-radius:999px;background:rgba(10,15,36,.6);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);max-width:calc(100% - 32px);overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{font:500 13px/1 var(--sans);color:var(--soft);text-decoration:none;padding:9px 14px;border-radius:999px;white-space:nowrap;transition:background .2s,color .2s}
+nav a:hover,nav a.on{background:rgba(143,211,255,.12);color:var(--ink)}
+
+main{width:min(880px,100% - 32px);margin:0 auto}
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:120px 0 18vh}
+.prompt{font:500 14px var(--mono);color:var(--cyan);letter-spacing:.02em;margin-bottom:18px}
+.prompt span{display:inline-block;width:.6em;height:1.1em;background:var(--cyan);vertical-align:-.2em;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+h1{font:700 clamp(48px,10vw,92px)/1 var(--display);letter-spacing:-.03em;text-shadow:0 4px 40px rgba(143,211,255,.25)}
+.tag{font:500 clamp(18px,2.6vw,23px)/1.4 var(--display);color:var(--soft);margin-top:18px;max-width:620px}
+.tag em{font-style:normal;background:linear-gradient(90deg,var(--pink),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.now{display:inline-flex;align-items:center;gap:10px;margin-top:26px;font-size:14px;color:var(--soft);padding:8px 14px 8px 12px;border-radius:999px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);width:fit-content;max-width:100%}
+.now::before{content:"";width:8px;height:8px;border-radius:50%;background:#7ee2a8;box-shadow:0 0 10px #7ee2a8;flex:none}
+.live{margin-top:14px;font-size:14px;color:var(--soft);display:flex;align-items:center;gap:10px;min-height:1.6em;opacity:0;transition:opacity .8s}
+.live.on{opacity:1}
+.live::before{content:"";width:10px;height:12px;border-radius:2px;background:#ff9ec4;box-shadow:0 0 12px #ff9ec4;flex:none}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 14px var(--sans);text-decoration:none;padding:11px 18px;border-radius:12px;border:1px solid var(--line);background:rgba(13,19,44,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s,border-color .2s,background .2s}
+.btn:hover{transform:translateY(-2px);border-color:rgba(143,211,255,.5);background:rgba(25,36,78,.6)}
+.btn.primary{background:linear-gradient(135deg,rgba(244,166,189,.9),rgba(143,211,255,.9));color:#0b1026;border-color:transparent}
+.btn svg{width:17px;height:17px;fill:currentColor}
+
+section{margin:0 0 56px}
+.panel{background:var(--glass);border:1px solid var(--line);border-radius:22px;padding:clamp(22px,4vw,40px);backdrop-filter:blur(16px) saturate(120%);-webkit-backdrop-filter:blur(16px) saturate(120%);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+h2{font:600 13px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:20px;display:flex;align-items:center;gap:12px}
+h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+.lead{font:500 clamp(19px,2.4vw,22px)/1.55 var(--display);color:var(--ink)}
+.lead+p{margin-top:14px;color:var(--soft)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:26px}
+.fact{padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+.fact b{display:block;font:600 15px var(--display)}
+.fact span{font-size:13px;color:var(--mute)}
+
+.job{position:relative;padding:0 0 30px 26px;border-left:1px solid var(--line)}
+.job:last-child{padding-bottom:0;border-left-color:transparent}
+.job::before{content:"";position:absolute;left:-5px;top:7px;width:9px;height:9px;border-radius:50%;background:var(--amber);box-shadow:0 0 12px var(--amber)}
+.job:first-child::before{background:#7ee2a8;box-shadow:0 0 12px #7ee2a8}
+.job header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 16px;align-items:baseline}
+.job h3{font:600 19px var(--display)}
+.job time{font:500 13px var(--mono);color:var(--mute)}
+.role{color:var(--pink);font-size:14.5px;font-weight:500}
+.role span{color:var(--mute);font-weight:400}
+.job ul{margin:10px 0 0;list-style:none;display:grid;gap:7px}
+.job li{position:relative;padding-left:18px;color:var(--soft);font-size:15px}
+.job li::before{content:"";position:absolute;left:2px;top:.72em;width:6px;height:1px;background:var(--cyan)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.card{display:flex;flex-direction:column;padding:20px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid var(--line);transition:transform .25s,border-color .25s,background .25s}
+.card:hover{transform:translateY(-3px);border-color:rgba(244,166,189,.45);background:rgba(255,255,255,.06)}
+.card h3{font:600 18px var(--display);margin-bottom:6px}
+.card p{color:var(--soft);font-size:14.5px;flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.chip{font:500 12px var(--mono);padding:4px 9px;border-radius:999px;background:rgba(143,211,255,.08);border:1px solid rgba(143,211,255,.2);color:#cfe9ff}
+.card .go{display:flex;gap:14px;margin-top:16px}
+.card .go a{font:600 13px var(--sans);color:var(--cyan);text-decoration:none}
+.card .go a:hover{text-decoration:underline}
+.card.feature{grid-column:1/-1;background:linear-gradient(135deg,rgba(244,166,189,.09),rgba(143,211,255,.07))}
+.stat{display:flex;flex-wrap:wrap;gap:22px;margin-top:14px}
+.stat div{font:600 26px var(--display)}
+.stat small{display:block;font:500 12px var(--sans);color:var(--mute)}
+
+.skills{display:grid;gap:18px}
+.skills h3{font:500 13px var(--sans);color:var(--mute);margin-bottom:8px}
+.skills .chips{margin-top:0}
+.skills .chip{font-size:13px;padding:6px 12px}
+
+.edu h3{font:600 19px var(--display)}
+.edu p{color:var(--soft)}
+.awards{list-style:none;display:grid;gap:10px;margin-top:22px}
+.awards li{display:flex;gap:14px;align-items:baseline;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+.awards b{font:600 15px var(--mono);color:var(--amber);min-width:72px}
+.awards span{color:var(--soft);font-size:15px}
+
+.contact{text-align:center}
+.contact .lead{max-width:560px;margin:0 auto}
+.contact .links{justify-content:center}
+footer{text-align:center;color:var(--mute);font-size:13px;padding:10px 16px 48px}
+
+a:focus-visible,.btn:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.prompt span{animation:none}}
+</style>
+<!-- Visitor analytics (GoatCounter): cookieless, no personal data. Uncomment after creating the account.
+<script data-goatcounter="https://GOATCOUNTER_CODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+-->
+</head>
+<body>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="frame" aria-hidden="true"><b></b><i></i></div>
+
+<nav aria-label="Sections">
+  <a href="#about">About</a>
+  <a href="#experience">Experience</a>
+  <a href="#projects">Projects</a>
+  <a href="#skills">Skills</a>
+  <a href="#education">Education</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<main>
+  <header class="hero">
+    <p class="prompt">~/wayne $ whoami<span></span></p>
+    <h1>Wayne Wen</h1>
+    <p class="tag">Backend &amp; AI engineer. <em>Computer Science at the University of Waterloo.</em></p>
+    <p class="now">Currently a Software Development Engineer Intern at Amazon, Prime Tech</p>
+    <p class="live" id="live" aria-live="polite"></p>
+    <div class="links">
+      <a class="btn primary" href="#projects">See my work</a>
+      <a class="btn" href="https://github.com/mr-neptune" rel="me"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.7.3 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a>
+      <a class="btn" href="https://www.linkedin.com/in/wayne-wen-aba0662b2" rel="me"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.3V9h3.4v1.6c.5-.9 1.7-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.1 20.5H3.5V9h3.6v11.5zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 .9.8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7C24 .8 23.2 0 22.2 0z"/></svg>LinkedIn</a>
+      <a class="btn" href="mailto:w28wen@uwaterloo.ca"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13zm2 .9V18h16V6.4l-8 5.6-8-5.6zM5.6 6 12 10.5 18.4 6H5.6z"/></svg>Email</a>
+    </div>
+  </header>
+
+  <section id="about" class="panel reveal">
+    <h2>About</h2>
+    <p class="lead">I'm a backend-focused engineer who builds AI systems that have to work in production: observability for large services, security for crypto wallets and agents that take on real tasks.</p>
+    <p>I study Computer Science at the University of Waterloo with an AI specialization and a minor in Combinatorics &amp; Optimization. Outside work, I usually end up teaching a program to play a game. My 2048 agent now reaches the 8192 tile.</p>
+    <div class="facts">
+      <div class="fact"><b>Waterloo CS '28</b><span>AI specialization, C&amp;O minor</span></div>
+      <div class="fact"><b>5 internships</b><span>Amazon, BitGo and more</span></div>
+      <div class="fact"><b>Backend &amp; AI</b><span>Go, Python, Java, TypeScript</span></div>
+      <div class="fact"><b>Vancouver, BC</b><span>Current location</span></div>
+    </div>
+  </section>
+
+  <section id="experience" class="panel reveal">
+    <h2>Experience</h2>
+    <article class="job">
+      <header><h3>Amazon</h3><time>Sep 2026 – Present</time></header>
+      <p class="role">Software Development Engineer Intern, Prime Tech <span>· Vancouver, BC</span></p>
+      <ul>
+        <li>Built and deployed a multi-agent incident analysis system that correlates CloudWatch telemetry across AWS services, surfaces related past incidents and gives on-call engineers evidence-backed reports.</li>
+        <li>Caught 10+ production degradations in one week, confirmed by on-call engineers. Several had no alarm at all, and one SEV2 outage was flagged 46 minutes before its alarm. Tuned the anomaly detection on a 15M-datapoint backtest, cutting false positives 7x.</li>
+        <li>Scaled ingestion from 5 metrics to 20K+ time series by streaming CloudWatch pages into SQLite under rate-limited concurrent requests, cutting fetch time 2.8x and memory 6.7x, then made the analysis 10x faster with byte-identical results.</li>
+        <li>Designed a rollout guardrail that compares one-minute live telemetry against pre-rollout baselines and warns before alarm thresholds trip, validated by replaying real rollouts, including a load test that peaked at 52K errors per minute.</li>
+      </ul>
+    </article>
+    <article class="job">
+      <header><h3>BitGo</h3><time>May – Aug 2026</time></header>
+      <p class="role">Software Engineer Intern, Wallet Core <span>· Palo Alto, CA</span></p>
+      <ul>
+        <li>Resolved a transaction-signing issue across 30+ EVM-family coins, cutting withdrawal errors on mainnet by 95%.</li>
+        <li>Engineered WebAuthn intent attestation in Node.js and TypeScript, binding transaction intent to passkey signatures and re-verifying it throughout multisig and MPC withdrawal flows.</li>
+        <li>Secured 280K+ transactions against in-flight payload tampering, database record tampering and replay attacks with origin checks, intent encryption and verification at every identified single point of failure.</li>
+        <li>Built Grafana dashboards for attack vectors, signature failures and false positives, and shaped non-blocking rollout safeguards.</li>
+      </ul>
+    </article>
+    <article class="job">
+      <header><h3>Emailgistics</h3><time>Sep – Dec 2025</time></header>
+      <p class="role">Senior Software Engineer Intern <span>· Oakville, ON</span></p>
+      <ul>
+        <li>Developed Go microservice features for email assignment rules, configurable alerts and new report types.</li>
+        <li>Parallelized report generation and settings loading with concurrency, and cut alert latency by 20–25% with flattened MongoDB collections and compound indexes.</li>
+        <li>Designed internal REST APIs for alert configuration and status with sub-100ms responses.</li>
+      </ul>
+    </article>
+    <article class="job">
+      <header><h3>Supernova MGU</h3><time>Jan – Apr 2025</time></header>
+      <p class="role">AI Software Engineer Intern <span>· Toronto, ON</span></p>
+      <ul>
+        <li>Built a Python RAG agent that scrapes social media asynchronously, analyzes high-performing posts and generates content with 66% higher engagement scores than a non-agent baseline.</li>
+        <li>Implemented fuzzy-matching search with RapidFuzz over scraped posts, reaching 90%+ keyword relevance in retrieval tests.</li>
+        <li>Automated new-broker onboarding with Python, n8n and REST APIs, reducing the onboarding error rate by 92%.</li>
+      </ul>
+    </article>
+    <article class="job">
+      <header><h3>Caribou Contest</h3><time>Sep – Dec 2024</time></header>
+      <p class="role">Full Stack Developer Intern <span>· Thorold, ON</span></p>
+      <ul>
+        <li>Improved mass-email delivery throughput by about 50% by optimizing algorithms and SQL queries.</li>
+      </ul>
+    </article>
+  </section>
+
+  <section id="projects" class="panel reveal">
+    <h2>Projects</h2>
+    <div class="grid">
+      <article class="card feature">
+        <h3>2048-Auto</h3>
+        <p>A CNN value-network agent that plays 2048, trained with TD(λ) reinforcement learning, experience replay, symmetry augmentation and expectimax search.</p>
+        <div class="stat">
+          <div>52%<small>games reaching 8192</small></div>
+          <div>94.8%<small>games reaching 4096</small></div>
+          <div>20K<small>training episodes</small></div>
+        </div>
+        <div class="chips"><span class="chip">Python</span><span class="chip">TensorFlow</span><span class="chip">Keras</span><span class="chip">Flask</span></div>
+        <div class="go"><a href="https://mr-neptune.github.io/2048-Auto/">Watch it play →</a><a href="https://github.com/mr-neptune/2048-Auto">Source</a></div>
+      </article>
+      <article class="card">
+        <h3>fantasy_cracker</h3>
+        <p>An autopilot for 9-category fantasy basketball that combines ML projections, Claude's reading of the news and 2,000-run matchup simulations to pick the best moves.</p>
+        <div class="chips"><span class="chip">Python</span><span class="chip">Claude</span><span class="chip">Docker</span></div>
+        <div class="go"><a href="https://github.com/mr-neptune/fantasy_cracker">Source</a></div>
+      </article>
+      <article class="card">
+        <h3>WebWhisper</h3>
+        <p>A browser side-panel AI agent for YouTube, Reddit, LinkedIn and Instagram, with bring-your-own-key support for five model providers.</p>
+        <div class="chips"><span class="chip">TypeScript</span><span class="chip">Go</span></div>
+        <div class="go"><a href="https://github.com/mr-neptune/WebWhisper">Source</a></div>
+      </article>
+      <article class="card">
+        <h3>Sidechat</h3>
+        <p>A chat UI with side questions that see the whole conversation without changing it, plus conversation forking and rewind.</p>
+        <div class="chips"><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">FastAPI</span></div>
+        <div class="go"><a href="https://github.com/mr-neptune/llm-btw">Source</a></div>
+      </article>
+      <article class="card">
+        <h3>Chamber Claw 3000</h3>
+        <p>A text-based dungeon crawler in modern C++, designed for low coupling and high cohesion.</p>
+        <div class="chips"><span class="chip">C++</span><span class="chip">OOP</span></div>
+        <div class="go"><a href="https://github.com/mr-neptune/cc3k">Source</a></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="skills" class="panel reveal">
+    <h2>Skills</h2>
+    <div class="skills">
+      <div><h3>Languages</h3><div class="chips"><span class="chip">Go</span><span class="chip">Python</span><span class="chip">Java</span><span class="chip">TypeScript</span><span class="chip">JavaScript</span><span class="chip">C/C++</span><span class="chip">Rust</span><span class="chip">SQL</span><span class="chip">Shell</span></div></div>
+      <div><h3>Frameworks &amp; APIs</h3><div class="chips"><span class="chip">Spring Boot</span><span class="chip">Gin</span><span class="chip">FastAPI</span><span class="chip">Flask</span><span class="chip">React</span><span class="chip">Vue.js</span><span class="chip">Node.js</span><span class="chip">REST</span><span class="chip">SSE</span></div></div>
+      <div><h3>Cloud &amp; DevOps</h3><div class="chips"><span class="chip">AWS</span><span class="chip">CloudWatch</span><span class="chip">DynamoDB</span><span class="chip">Bedrock</span><span class="chip">Docker</span><span class="chip">Kubernetes</span><span class="chip">Kafka</span><span class="chip">Jenkins</span><span class="chip">Grafana</span></div></div>
+      <div><h3>Data &amp; AI</h3><div class="chips"><span class="chip">PostgreSQL</span><span class="chip">MongoDB</span><span class="chip">Redis</span><span class="chip">ChromaDB</span><span class="chip">TensorFlow</span><span class="chip">Keras</span><span class="chip">LangChain</span><span class="chip">RAG</span><span class="chip">Multi-agent systems</span></div></div>
+    </div>
+  </section>
+
+  <section id="education" class="panel reveal edu">
+    <h2>Education</h2>
+    <h3>University of Waterloo</h3>
+    <p>Bachelor of Computer Science, AI specialization, Combinatorics &amp; Optimization minor · 2023 – 2028</p>
+    <ul class="awards">
+      <li><b>Top 0.5%</b><span>CEMC Canadian Senior Mathematics Contest, 2021 and 2022</span></li>
+      <li><b>Top 1%</b><span>AMC 12, 2021 and 2022</span></li>
+      <li><b>Top 5%</b><span>Euclid Mathematics Contest, 2023</span></li>
+    </ul>
+  </section>
+
+  <section id="contact" class="panel reveal contact">
+    <h2>Contact</h2>
+    <p class="lead">Open to conversations about backend systems, AI agents and internship opportunities.</p>
+    <div class="links">
+      <a class="btn primary" href="https://www.linkedin.com/in/wayne-wen-aba0662b2">Message me on LinkedIn</a>
+      <a class="btn" href="mailto:w28wen@uwaterloo.ca">w28wen@uwaterloo.ca</a>
+      <a class="btn" href="https://github.com/mr-neptune">GitHub</a>
+    </div>
+  </section>
+</main>
+<footer>© 2026 Wayne Wen · Built under a night sky</footer>
+
+<script>
+(function () {
+  var canvas = document.getElementById('scene');
+  var ctx = canvas.getContext('2d');
+  var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W, H, dpr, horizon, base, stars, windows, spots, shooting = null, last = 0;
+  var LIVE_URL = location.protocol === 'https:' ? 'wss://' + location.host + '/live'
+    : location.protocol === 'http:' ? 'ws://' + location.host + '/live' : '';
+  var live = { slots: [], you: -1 }, seen = {};
+
+  function rng(seed) {
+    return function () {
+      seed = (seed * 16807) % 2147483647;
+      return (seed - 1) / 2147483646;
+    };
+  }
+
+  function build() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    horizon = H * (W < 760 ? 0.74 : 0.7);
+    var r = rng(20260109);
+
+    base = document.createElement('canvas');
+    base.width = W * dpr;
+    base.height = H * dpr;
+    var b = base.getContext('2d');
+    b.scale(dpr, dpr);
+
+    var sky = b.createLinearGradient(0, 0, 0, horizon);
+    sky.addColorStop(0, '#0a1030');
+    sky.addColorStop(0.35, '#1a2a63');
+    sky.addColorStop(0.68, '#3f56a0');
+    sky.addColorStop(0.86, '#8a78b4');
+    sky.addColorStop(0.95, '#d98fa6');
+    sky.addColorStop(1, '#f2b7a2');
+    b.fillStyle = sky;
+    b.fillRect(0, 0, W, horizon + 2);
+
+    b.globalCompositeOperation = 'lighter';
+    for (var i = 0; i < 70; i++) {
+      var y = horizon * (0.15 + r() * 0.8);
+      var x = r() * W * 1.2 - W * 0.1;
+      var len = W * (0.2 + r() * 0.5);
+      var g = b.createLinearGradient(x, y, x + len, y - len * 0.18);
+      var tint = y > horizon * 0.65 ? '255,170,190' : '170,190,255';
+      g.addColorStop(0, 'rgba(' + tint + ',0)');
+      g.addColorStop(0.5, 'rgba(' + tint + ',' + (0.04 + r() * 0.06) + ')');
+      g.addColorStop(1, 'rgba(' + tint + ',0)');
+      b.strokeStyle = g;
+      b.lineWidth = 1 + r() * 3;
+      b.beginPath();
+      b.moveTo(x, y);
+      b.quadraticCurveTo(x + len / 2, y - len * 0.14, x + len, y - len * 0.18);
+      b.stroke();
+    }
+    b.globalCompositeOperation = 'source-over';
+
+    var mx = W * (W < 760 ? 0.72 : 0.62), my = H * 0.14, mr = Math.max(26, Math.min(W, H) * 0.045);
+    var glow = b.createRadialGradient(mx, my, 0, mx, my, mr * 5);
+    glow.addColorStop(0, 'rgba(255,240,220,.22)');
+    glow.addColorStop(1, 'rgba(255,240,220,0)');
+    b.fillStyle = glow;
+    b.fillRect(mx - mr * 5, my - mr * 5, mr * 10, mr * 10);
+    var moon = document.createElement('canvas');
+    moon.width = moon.height = Math.ceil(mr * 4 * dpr);
+    var m = moon.getContext('2d');
+    m.scale(dpr, dpr);
+    m.fillStyle = '#fff3dc';
+    m.beginPath();
+    m.arc(mr * 2, mr * 2, mr, 0, Math.PI * 2);
+    m.fill();
+    m.globalCompositeOperation = 'destination-out';
+    m.beginPath();
+    m.arc(mr * 2 - mr * 0.42, mr * 2 - mr * 0.3, mr * 0.95, 0, Math.PI * 2);
+    m.fill();
+    b.save();
+    b.shadowColor = 'rgba(255,240,215,.9)';
+    b.shadowBlur = 18;
+    b.drawImage(moon, mx - mr * 2, my - mr * 2, mr * 4, mr * 4);
+    b.restore();
+
+    var haze = b.createLinearGradient(0, horizon - 40, 0, horizon + 30);
+    haze.addColorStop(0, 'rgba(242,183,162,0)');
+    haze.addColorStop(0.6, 'rgba(160,140,190,.45)');
+    haze.addColorStop(1, 'rgba(40,46,92,.0)');
+    b.fillStyle = haze;
+    b.fillRect(0, horizon - 40, W, 70);
+
+    var ground = b.createLinearGradient(0, horizon, 0, H);
+    ground.addColorStop(0, '#26305f');
+    ground.addColorStop(1, '#070b1f');
+    b.fillStyle = ground;
+    b.fillRect(0, horizon, W, H - horizon);
+
+    windows = [];
+    spots = [];
+    var layers = [
+      { top: 0.03, var: 0.035, wmin: 6, wmax: 18, color: '#2b3870', lit: 0.18, size: 1 },
+      { top: 0.05, var: 0.06, wmin: 10, wmax: 28, color: '#1a2350', lit: 0.2, size: 1.4 },
+      { top: 0.08, var: 0.1, wmin: 16, wmax: 44, color: '#0e1434', lit: 0.22, size: 2 }
+    ];
+    var depth = H - horizon;
+    layers.forEach(function (L, li) {
+      var x = -10;
+      var y0 = horizon + depth * (0.04 + li * 0.2);
+      while (x < W + 10) {
+        var w = L.wmin + r() * (L.wmax - L.wmin);
+        var h = H * (L.top * 0.4 + r() * L.var);
+        var top = y0 - h;
+        b.fillStyle = L.color;
+        b.fillRect(x, top, w, H - top);
+        if (r() < 0.12 && h > H * 0.06) {
+          b.fillRect(x + w / 2 - 0.5, top - h * 0.25, 1, h * 0.25);
+          windows.push({ x: x + w / 2 - 1.2, y: top - h * 0.25, s: 2.4, c: '#ff5a6a', blink: true, p: r() * 6 });
+        }
+        var s = L.size, gap = s * 2.4;
+        for (var wy = top + gap; wy < Math.min(H, y0 + depth * 0.5); wy += gap) {
+          for (var wx = x + gap * 0.7; wx < x + w - s; wx += gap) {
+            if (r() < L.lit) {
+              var warm = r() < 0.65;
+              var c = warm ? '#ffcf8a' : '#9fd8ff';
+              b.globalAlpha = 0.35 + r() * 0.5;
+              b.fillStyle = c;
+              b.fillRect(wx, wy, s, s);
+              b.globalAlpha = 1;
+              if (r() < 0.02) windows.push({ x: wx, y: wy, s: s, c: c, p: r() * 6, flick: true });
+            } else if (li > 0 && wx > W * 0.1 && wx < W * 0.9 && wy < horizon + depth * 0.4 && r() < 0.25) {
+              spots.push({ x: wx, y: wy, s: s });
+            }
+          }
+        }
+        x += w + r() * 3;
+      }
+    });
+
+    b.globalCompositeOperation = 'lighter';
+    for (var k = 0; k < 3; k++) {
+      var ry = horizon + depth * (0.32 + k * 0.17);
+      var road = b.createLinearGradient(0, ry, W, ry - depth * 0.1);
+      road.addColorStop(0, 'rgba(255,90,90,0)');
+      road.addColorStop(0.5, k === 1 ? 'rgba(255,200,140,.35)' : 'rgba(255,90,110,.35)');
+      road.addColorStop(1, 'rgba(255,90,90,0)');
+      b.strokeStyle = road;
+      b.lineWidth = 2 + k;
+      b.beginPath();
+      b.moveTo(-20, ry + 20);
+      b.quadraticCurveTo(W * 0.5, ry - depth * 0.08, W + 20, ry - depth * 0.02);
+      b.stroke();
+    }
+    b.globalCompositeOperation = 'source-over';
+
+    for (var q = spots.length - 1; q > 0; q--) {
+      var z = Math.floor(r() * (q + 1)), tmp = spots[q];
+      spots[q] = spots[z];
+      spots[z] = tmp;
+    }
+
+    stars = [];
+    var count = Math.round(W * horizon / 4200);
+    for (var n = 0; n < count; n++) {
+      stars.push({
+        x: r() * W,
+        y: r() * horizon * 0.82,
+        r: r() < 0.9 ? 0.4 + r() * 0.8 : 1.2 + r() * 0.6,
+        p: r() * Math.PI * 2,
+        sp: 0.5 + r() * 1.5
+      });
+    }
+  }
+
+  function draw(t) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.drawImage(base, 0, 0, W, H);
+    var ts = t / 1000;
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var a = still ? 0.8 : 0.45 + 0.45 * Math.sin(ts * s.sp + s.p);
+      ctx.globalAlpha = a * (1 - s.y / (horizon * 1.1));
+      ctx.fillStyle = '#fff8ec';
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (still) drawVisitors(0);
+    if (!still) {
+      for (var j = 0; j < windows.length; j++) {
+        var w = windows[j];
+        var on = w.blink ? Math.sin(ts * 2 + w.p) > 0.3 : Math.sin(ts * 0.4 + w.p) > -0.2;
+        if (!on) {
+          ctx.fillStyle = '#121a40';
+          ctx.fillRect(w.x, w.y, w.s, w.s);
+        } else if (w.blink) {
+          ctx.fillStyle = w.c;
+          ctx.shadowColor = w.c;
+          ctx.shadowBlur = 8;
+          ctx.fillRect(w.x, w.y, w.s, w.s);
+          ctx.shadowBlur = 0;
+        }
+      }
+      drawVisitors(ts);
+      if (!shooting && ts - last > 6 && Math.random() < 0.01) {
+        last = ts;
+        shooting = { x: W * (0.1 + Math.random() * 0.5), y: H * (0.05 + Math.random() * 0.2), t: ts };
+      }
+      if (shooting) {
+        var k = (ts - shooting.t) / 1.1;
+        if (k > 1) {
+          shooting = null;
+        } else {
+          var hx = shooting.x + k * W * 0.28, hy = shooting.y + k * H * 0.08;
+          var tail = ctx.createLinearGradient(hx, hy, hx - 140, hy - 40);
+          tail.addColorStop(0, 'rgba(255,255,255,' + (1 - k) + ')');
+          tail.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.strokeStyle = tail;
+          ctx.lineWidth = 1.6;
+          ctx.beginPath();
+          ctx.moveTo(hx, hy);
+          ctx.lineTo(hx - 140, hy - 40);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function drawVisitors(ts) {
+    if (!spots || !spots.length) return;
+    for (var i = 0; i < live.slots.length; i++) {
+      var slot = live.slots[i], p = spots[slot % spots.length];
+      if (!(slot in seen)) seen[slot] = ts;
+      var mine = slot === live.you;
+      var fade = still ? 1 : Math.min(1, (ts - seen[slot]) / 1.2);
+      var pulse = mine && !still ? 0.75 + 0.25 * Math.sin(ts * 2.4) : 1;
+      var w = Math.max(5, p.s * 2.8) * (mine ? 1.4 : 1), h = w * 1.35;
+      var cx = p.x + p.s / 2, cy = p.y + p.s / 2;
+      var halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 3.2);
+      halo.addColorStop(0, mine ? 'rgba(255,111,168,.45)' : 'rgba(127,216,255,.35)');
+      halo.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.globalAlpha = fade * pulse;
+      ctx.fillStyle = halo;
+      ctx.fillRect(cx - w * 3.2, cy - w * 3.2, w * 6.4, w * 6.4);
+      ctx.fillStyle = mine ? '#ffb3d1' : '#d4f4ff';
+      ctx.shadowColor = mine ? '#ff6fa8' : '#7fd8ff';
+      ctx.shadowBlur = mine ? 18 : 12;
+      ctx.fillRect(cx - w / 2, cy - h / 2, w, h);
+    }
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+  }
+
+  function loop(t) {
+    draw(t);
+    if (!still) requestAnimationFrame(loop);
+  }
+
+  var timer;
+  window.addEventListener('resize', function () {
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      build();
+      if (still) draw(0);
+    }, 150);
+  });
+  build();
+  if (still) draw(0); else requestAnimationFrame(loop);
+
+  var liveEl = document.getElementById('live');
+  var param = new URLSearchParams(location.search).get('live');
+  var url = param || LIVE_URL;
+  var sock = null, retry = 2000, timerLive = null;
+
+  function describe() {
+    var n = live.slots.length;
+    if (!n) { liveEl.classList.remove('on'); return; }
+    liveEl.textContent = n === 1
+      ? "You're the only one looking out at this city right now. The pink window is yours."
+      : n + ' people are looking out at this city right now. The pink window is yours.';
+    liveEl.classList.add('on');
+  }
+
+  function connect() {
+    if (sock || document.hidden || !url) return;
+    try { sock = new WebSocket(url); } catch (e) { return; }
+    sock.onopen = function () { retry = 2000; };
+    sock.onmessage = function (e) {
+      try {
+        var msg = JSON.parse(e.data);
+        if (msg.type !== 'skyline') return;
+        live = { slots: msg.slots, you: msg.you };
+        describe();
+        if (still) draw(0);
+      } catch (err) {}
+    };
+    sock.onclose = function () {
+      sock = null;
+      live = { slots: [], you: -1 };
+      seen = {};
+      describe();
+      if (still) draw(0);
+      if (!document.hidden) {
+        clearTimeout(timerLive);
+        timerLive = setTimeout(connect, retry);
+        retry = Math.min(retry * 2, 60000);
+      }
+    };
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      clearTimeout(timerLive);
+      if (sock) sock.close(1000, 'hidden');
+    } else {
+      connect();
+    }
+  });
+  var demo = parseInt(new URLSearchParams(location.search).get('demo'), 10);
+  if (demo > 0) {
+    live = { slots: [], you: 7 };
+    for (var d = 0; d < Math.min(demo, 50); d++) live.slots.push(7 + d * 37);
+    describe();
+    if (still) draw(0);
+  } else {
+    connect();
+  }
+
+  var reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !still) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    reveals.forEach(function (el) { io.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  var links = document.querySelectorAll('nav a');
+  var sections = Array.prototype.map.call(links, function (a) { return document.querySelector(a.getAttribute('href')); });
+  function mark() {
+    var y = window.scrollY + window.innerHeight * 0.35, idx = -1;
+    sections.forEach(function (s, i) { if (s.offsetTop <= y) idx = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === idx); });
+  }
+  window.addEventListener('scroll', mark, { passive: true });
+  mark();
+})();
+</script>
+</body>
+</html>

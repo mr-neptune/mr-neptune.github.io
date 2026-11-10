@@ -2,7 +2,9 @@ import { DurableObject } from "cloudflare:workers";
 
 export interface Env {
   SKYLINE: DurableObjectNamespace<Skyline>;
+  ASSETS: Fetcher;
   ALLOWED_ORIGINS: string;
+  CANONICAL_HOST: string;
 }
 
 const MAX_VISITORS = 300;
@@ -80,22 +82,27 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
+    // www and plain HTTP redirect to https on the canonical domain.
+    if (
+      env.CANONICAL_HOST &&
+      (url.hostname === `www.${env.CANONICAL_HOST}` || url.protocol === "http:")
+    ) {
+      url.hostname = env.CANONICAL_HOST;
+      url.protocol = "https:";
+      return Response.redirect(url.toString(), 301);
+    }
+
     if (url.pathname === "/live") {
       if (request.headers.get("Upgrade")?.toLowerCase() !== "websocket") {
         return new Response("Expected a WebSocket upgrade", { status: 426 });
       }
       if (!originAllowed(request.headers.get("Origin"), env)) {
+        console.log(`refused origin=${request.headers.get("Origin")} host=${url.host}`);
         return new Response("Origin not allowed", { status: 403 });
       }
       return env.SKYLINE.getByName("main").fetch(request);
     }
 
-    if (url.pathname === "/") {
-      return new Response("Backend for https://mr-neptune.github.io\n", {
-        headers: { "content-type": "text/plain; charset=utf-8" },
-      });
-    }
-
-    return new Response("Not found", { status: 404 });
+    return env.ASSETS.fetch(request);
   },
 } satisfies ExportedHandler<Env>;
