@@ -1,0 +1,15 @@
+{
+  "$schema": "https://unpkg.com/wrangler@4.159.0/config-schema.json",
+  "name": "wayne-skyline",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "vars": {
+    "ALLOWED_ORIGINS": "https://mr-neptune.github.io"
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "SKYLINE", "class_name": "Skyline" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Skyline"] }],
+  "observability": { "enabled": true }
+}
