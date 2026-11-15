@@ -9,6 +9,12 @@
     { "pattern": "wayne-wen.dev", "custom_domain": true },
     { "pattern": "www.wayne-wen.dev", "custom_domain": true }
   ],
+  // Noise to Music lives in the lab submodule (github.com/mr-neptune/noise-to-music).
+  // Copy its web/ folder to /lab/ before every deploy or dev run.
+  "build": {
+    "command": "test -f lab/web/index.html || git submodule update --init lab; rm -rf public/lab && cp -R lab/web public/lab",
+    "watch_dir": "lab/web"
+  },
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",

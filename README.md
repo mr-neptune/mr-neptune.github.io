@@ -6,4 +6,16 @@ Personal website of Wayne Wen, live at https://wayne-wen.dev.
 - `src/index.ts`: a Cloudflare Worker that serves the page and runs `/live`, a Durable Object that lights one skyline window per visitor over WebSockets.
 - `index.html` and `404.html` at the repository root redirect the old GitHub Pages address to the new domain.
 
+- `lab/`: [Noise to Music](https://github.com/mr-neptune/noise-to-music) as a git submodule, served at `/lab/`. Each `wrangler deploy` or `wrangler dev` copies its `web/` folder to `public/lab/` (gitignored) during the build step.
+
+Clone with `git clone --recurse-submodules`, or run `git submodule update --init` in an existing clone. The build step also initializes the submodule if it is missing.
+
 Deploy with `wrangler deploy`. Run locally with `wrangler dev`.
+
+To ship a new version of the lab, update the submodule to the commit you want, commit the new pointer, then deploy:
+
+```sh
+git -C lab fetch && git -C lab checkout origin/main
+git add lab && git commit -m "Update Noise to Music"
+wrangler deploy
+```

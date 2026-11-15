@@ -1,0 +1,4 @@
+[submodule "lab"]
+	path = lab
+	url = https://github.com/mr-neptune/noise-to-music.git
+	branch = main

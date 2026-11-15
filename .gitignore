@@ -2,3 +2,5 @@
 .wrangler/
 node_modules/
 wrangler.preview.jsonc
+# Copied from the lab submodule at build time.
+public/lab/
