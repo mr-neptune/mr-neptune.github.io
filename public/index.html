@@ -102,7 +102,13 @@ h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--li
 .card .go{display:flex;gap:14px;margin-top:16px}
 .card .go a{font:600 13px var(--sans);color:var(--cyan);text-decoration:none}
 .card .go a:hover{text-decoration:underline}
-.card.feature{grid-column:1/-1;background:linear-gradient(135deg,rgba(244,166,189,.09),rgba(143,211,255,.07))}
+.card.feature{background:linear-gradient(135deg,rgba(244,166,189,.09),rgba(143,211,255,.07))}
+/* Projects: two equal feature cards on top, then rows of three; the last two share a row. */
+#projects .grid{grid-template-columns:repeat(6,1fr)}
+#projects .grid>.card{grid-column:span 2}
+#projects .grid>.card.feature,#projects .grid>.card.half{grid-column:span 3}
+@media (max-width:900px){#projects .grid{grid-template-columns:repeat(2,1fr)}#projects .grid>.card,#projects .grid>.card.feature,#projects .grid>.card.half{grid-column:span 1}}
+@media (max-width:600px){#projects .grid{grid-template-columns:1fr}}
 .stat{display:flex;flex-wrap:wrap;gap:22px;margin-top:14px}
 .stat div{font:600 26px var(--display)}
 .stat small{display:block;font:500 12px var(--sans);color:var(--mute)}
@@ -234,11 +240,22 @@ a:focus-visible,.btn:focus-visible{outline:2px solid var(--cyan);outline-offset:
         <div class="chips"><span class="chip">Python</span><span class="chip">TensorFlow</span><span class="chip">Keras</span><span class="chip">Flask</span></div>
         <div class="go"><a href="https://mr-neptune.github.io/2048-Auto/">Watch it play →</a><a href="https://github.com/mr-neptune/2048-Auto">Source</a></div>
       </article>
-      <article class="card">
+      <article class="card feature">
         <h3>Noise to Music</h3>
-        <p>Random notes evolve into a loop in the genre you pick, or a blend of two. You hear it learn and watch the loss fall. A genetic algorithm runs live in your browser.</p>
+        <p>Random notes evolve into a song with verses and a bridge in the genre you pick, or a blend of two. You hear it learn while a genetic algorithm, scored by a critic trained on real music, runs live in your browser.</p>
+        <div class="stat">
+          <div>5<small>genres to blend</small></div>
+          <div>32<small>bars per song</small></div>
+          <div>45K<small>bars of jazz learned</small></div>
+        </div>
         <div class="chips"><span class="chip">JavaScript</span><span class="chip">Web Audio</span><span class="chip">Optimization</span></div>
-        <div class="go"><a href="/lab/">Try it →</a></div>
+        <div class="go"><a href="/lab/">Try it →</a><a href="https://github.com/mr-neptune/noise-to-music">Source</a></div>
+      </article>
+      <article class="card">
+        <h3>Layers</h3>
+        <p>Split a song into vocals, drums, bass, guitar and piano, and play each layer on its own. A Demucs network does the separation on a home server; Fourier views show the sound underneath.</p>
+        <div class="chips"><span class="chip">Python</span><span class="chip">PyTorch</span><span class="chip">Cloudflare</span></div>
+        <div class="go"><a href="/layers/">Try it →</a><a href="https://github.com/mr-neptune/layers">Source</a></div>
       </article>
       <article class="card">
         <h3>fantasy_cracker</h3>
@@ -252,13 +269,13 @@ a:focus-visible,.btn:focus-visible{outline:2px solid var(--cyan);outline-offset:
         <div class="chips"><span class="chip">TypeScript</span><span class="chip">Go</span></div>
         <div class="go"><a href="https://github.com/mr-neptune/WebWhisper">Source</a></div>
       </article>
-      <article class="card">
+      <article class="card half">
         <h3>Sidechat</h3>
         <p>A chat UI with side questions that see the whole conversation without changing it, plus conversation forking and rewind.</p>
         <div class="chips"><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">FastAPI</span></div>
         <div class="go"><a href="https://github.com/mr-neptune/llm-btw">Source</a></div>
       </article>
-      <article class="card">
+      <article class="card half">
         <h3>Chamber Claw 3000</h3>
         <p>A text-based dungeon crawler in modern C++, designed for low coupling and high cohesion.</p>
         <div class="chips"><span class="chip">C++</span><span class="chip">OOP</span></div>
