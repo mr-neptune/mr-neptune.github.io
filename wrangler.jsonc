@@ -11,9 +11,10 @@
   ],
   // Noise to Music lives in the lab submodule (github.com/mr-neptune/noise-to-music).
   // Copy its web/ folder to /lab/ before every deploy or dev run.
+  // Layers lives in the layers submodule (github.com/mr-neptune/layers); its page goes to /layers/.
   "build": {
-    "command": "test -f lab/web/index.html || git submodule update --init lab; rm -rf public/lab && cp -R lab/web public/lab",
-    "watch_dir": "lab/web"
+    "command": "test -f lab/web/index.html || git submodule update --init lab; test -f layers/web/index.html || git submodule update --init layers; rm -rf public/lab public/layers && cp -R lab/web public/lab && cp -R layers/web public/layers",
+    "watch_dir": ["lab/web", "layers/web"]
   },
   "assets": {
     "directory": "./public",
@@ -22,7 +23,10 @@
   },
   "vars": {
     "ALLOWED_ORIGINS": "https://wayne-wen.dev",
-    "CANONICAL_HOST": "wayne-wen.dev"
+    "CANONICAL_HOST": "wayne-wen.dev",
+    "LAYERS_ORIGIN": "https://layers-origin.wayne-wen.dev",
+    "ACCESS_TEAM_DOMAIN": "mr-neptune.cloudflareaccess.com",
+    "LAYERS_ACCESS_AUD": "873969001a247d89d0fec9c4c96c95f1d05a704cbe6a2b5502c5a6885d1cdaca"
   },
   "durable_objects": {
     "bindings": [{ "name": "SKYLINE", "class_name": "Skyline" }]

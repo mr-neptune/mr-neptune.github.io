@@ -2,3 +2,7 @@
 	path = lab
 	url = https://github.com/mr-neptune/noise-to-music.git
 	branch = main
+[submodule "layers"]
+	path = layers
+	url = https://github.com/mr-neptune/layers.git
+	branch = main

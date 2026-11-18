@@ -8,7 +8,11 @@ Personal website of Wayne Wen, live at https://wayne-wen.dev.
 
 - `lab/`: [Noise to Music](https://github.com/mr-neptune/noise-to-music) as a git submodule, served at `/lab/`. Each `wrangler deploy` or `wrangler dev` copies its `web/` folder to `public/lab/` (gitignored) during the build step.
 
-Clone with `git clone --recurse-submodules`, or run `git submodule update --init` in an existing clone. The build step also initializes the submodule if it is missing.
+- `layers/`: [Layers](https://github.com/mr-neptune/layers) as a git submodule. Its page is copied to `public/layers/` the same way. Song processing runs on Wayne's home server, behind a Cloudflare Tunnel:
+  - The Worker forwards `/layers/demo*` (public, cached at the edge) and `/layers/api/*` to `LAYERS_ORIGIN`, adding the `LAYERS_KEY` secret.
+  - `/layers/api/*` is guarded by a Cloudflare Access app (owner only), and the Worker verifies the Access token as well (`ACCESS_TEAM_DOMAIN`, `LAYERS_ACCESS_AUD`).
+
+Clone with `git clone --recurse-submodules`, or run `git submodule update --init` in an existing clone. The build step also initializes the submodules if they are missing.
 
 Deploy with `wrangler deploy`. Run locally with `wrangler dev`.
 
